@@ -1,0 +1,22 @@
+*, *::after, *::before{
+    box-sizing: border-box;
+}
+
+body{
+    margin: 0;
+    padding: 0;
+}
+
+
+.board{
+    max-width: 500px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(auto-fill, 100px);
+    grid-auto-rows: 100px;
+    border: 1px solid red;
+}
+
+.cell{
+    font-size: 24px;
+}
