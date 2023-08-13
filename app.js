@@ -33,9 +33,17 @@ const gameBoard = (()=> {
     }
 
     const getBoard = () => { return board };
-    const isBoardFull = () => {
-        return board.every(rows => rows.every(columns => columns.getValue() !== ""));
-    };
+    function isBoardFull() {
+        const boardData = board;
+        for (let rowIndex = 0; rowIndex < boardData.length; rowIndex++) {
+            for (let columnIndex = 0; columnIndex < boardData[0].length; columnIndex++) {
+                if (boardData[rowIndex][columnIndex].getValue() === "") {
+                    return false; // If any cell is unoccupied, return false
+                }
+            }
+        }
+        return true; // All cells are occupied
+    }
 
     const isCellOccupied =(rowIndex,columnIndex) =>{
         return board[rowIndex][columnIndex].getValue() !== "";
@@ -105,12 +113,77 @@ const gameController = (playerOneName = 'Player One', playerTwoName = 'Player Tw
         board.setCellValue(rowIndex, columnIndex, getActivePlayer());
         
         //this is where we check the for winner
-        switchPlayer();
-        printNewRound();
-
-       
+        if(!checkForWinner()){
+            switchPlayer();
+            printNewRound();
+        }
+        else{
+            console.log(`${getActivePlayer().name} Won!`)
+        }
     }
-    
+    function checkForWinner() {
+        console.log('Checking for winner...');
+        console.log('Checking row winning sequence...');
+        if (checkRowWinningSequence('X') || checkRowWinningSequence('O') ) {
+            console.log('Row winning sequence found!');
+            return true;
+        }
+        console.log('Checking column winning sequence...');
+        if (checkColumnWinningSequence('X') || checkColumnWinningSequence('O')) {
+            console.log('Column winning sequence found!');
+            return true;
+        }
+        console.log('Checking diagonal winning sequence...');
+        if (checkDiagonalWinningSequence('X') || checkDiagonalWinningSequence('O')) {
+            console.log('Diagonal winning sequence found!');
+            return true;
+        }
+        console.log('No winning sequence found.');
+        return false;
+    }
+
+    function checkRowWinningSequence(winningSequence) {
+        const boardData = board.getBoard();
+        for (let rowIndex = 0; rowIndex < boardData.length; rowIndex++) {
+            const row = boardData[rowIndex];
+            if (row.every(cell => cell.getValue() === winningSequence)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    function checkColumnWinningSequence(winningSequence) {
+        const boardData = board.getBoard();
+        for (let columnIndex = 0; columnIndex < boardData[0].length; columnIndex++) {
+            const column = [];
+            for (let rowIndex = 0; rowIndex < boardData.length; rowIndex++) {
+                column.push(boardData[rowIndex][columnIndex].getValue());
+            }
+            if (column.every(cellValue => cellValue === winningSequence)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    function checkDiagonalWinningSequence(winningSequence) {
+        const boardData = board.getBoard();
+        const diagonal1 = [];
+        const diagonal2 = [];
+        
+        for (let i = 0; i < boardData.length; i++) {
+            diagonal1.push(boardData[i][i].getValue());
+            diagonal2.push(boardData[i][boardData.length - 1 - i].getValue());
+        }
+        
+        if (diagonal1.every(cellValue => cellValue === winningSequence) ||
+            diagonal2.every(cellValue => cellValue === winningSequence)) {
+            return true;
+        }
+        
+        return false;
+    }
+
+
     
     printNewRound();
 
@@ -181,8 +254,11 @@ const screenController = () => {
         updateScreen();
     }
 
+
     updateScreen()
 
 }
+
+
 
 screenController()
