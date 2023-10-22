@@ -1,112 +1,51 @@
-
-
-@import url('https://fonts.googleapis.com/css2?family=Electrolize&family=Manrope:wght@200;300;400;500;600;700;800&display=swap');
-
-
-*, *::after, *::before{
+*{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
-body{
-
-    margin: 0;
-    padding: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgb(8, 8, 8);
-    font-family: 'Electrolize', sans-serif;
+.hide{
+    display: none;
 }
 
-#container{
-    width: 100%;
+.active{
+    background-color: black!important;
+    color: white !important;
 }
 
-h1{
-    color: rgb(251, 84, 0);
+
+
+.btn{
+    display: inline-block;
+    place-items: center;
+    width: 128px; 
+    border: 1px solid black;
+    padding: 8px 6px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn.active:hover{
+    background-color: rgb(48, 48, 48);
+}
+
+.btn:hover{
+    background-color: #eaeaea;
+}
+
+.btn.play:hover{
+    background-color: rgb(189, 2, 2) !important;
+}
+
+canvas{
+    border: 1px solid black;
+}
+
+
+.options{
+    border: 1px solid black;
+    width: fit-content;
+    padding: 24px 24px;
     text-align: center;
-    margin-top: 64px;
-    font-family: 'Electrolize', sans-serif;
-    font-weight: bold;
-}
-
-#turn{
-    text-align: center;
-    font-size: 24px;
-    color: white;
-    margin-top: 24px;
-}
-#turn::before{
-    content: 'Turn: ';
-    color: white;
-    font-size: 32px;
-}
-
-#board{
-    max-width: 500px;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(auto-fill, 100px);
-    grid-auto-rows: 100px;
-    border: 4px solid skyblue;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 64px;
-    
-}
-
-.cell{
-    font-size: 24px;
-    width: 100%;
-    height: auto;
-    color: whitesmoke;
-    background-color: #181818;
-    font-family: 'Electrolize', sans-serif;
-    
-}
-
-.cell:hover{
-    background-color: #585858;
-}
-
-.endgame-message{
-    background-color: black;
-    color: white;
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    top: 0;
-    left: 0;
-    flex-direction: column;
-}
-
-.endgame-message p{
-    font-size: 48px;
-    margin-bottom: 24px;
-    color: whitesmoke;
-}
-
-#resetBtn,
-.endgame-message button {
-    font-size: 20px;
-    display: block;
-    padding: 14px 10px;
-    width: 160px;
-    background-color: transparent;
-    border: 1px solid #fb5400;
-    color: white;
-    margin-top: 40px;
-    margin-right: auto;
-    margin-left: auto;
-    border-radius: 8px;
-}
-
-#resetBtn:hover,
-.endgame-message button:hover {
-    background-color: #fb5400;
-    color: black;
 }

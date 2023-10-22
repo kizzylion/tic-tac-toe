@@ -8,13 +8,37 @@
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-    <div class="screen" id="container">
-        <h1>Kizzylion's Tic-Tac-Toe</h1>
-        <div id="turn"></div>
-        <div id="board"></div>
-        <button type="button" id="resetBtn">Reset</button>
+    <canvas id="cvs" class="hide" width="450" height="450" style="margin-left: auto; margin-right: auto; margin-top:calc(100vh - 80vh);"></canvas>
+
+    <div class="options" style="margin-left: auto; margin-right: auto; margin-top:calc(100vh - 80vh);">
+        <h1 style="margin-bottom: 20px; color: rgb(213, 0, 0);">Kizzylion Tic Tac Toe</h1>
+        <h2 style="margin-bottom: 12px;">Player versus</h2>
+        <div class="computer btn" style="margin-bottom: 20px; margin-right: 16px;">COMPUTER</div>
+        <div class="human btn">HUMAN</div>
+        <h2 style="margin-bottom: 12px;">Symbol</h2>
+        <div class="x btn" style="margin-bottom: 20px; margin-right: 16px;">X</div>
+        <div class="o btn" style="margin-bottom: 20px;">O</div>
+        <br>
+        <div 
+            class="play btn" 
+            style="
+            background-color: red; 
+            color: white; 
+            border: none; 
+            font-weight: 800; 
+            width: fit-content; 
+            padding: 8px 12px;">
+            Play
+        </div>
+    </div>
+
+    <div class="gameover hide">
+        <h1>the winner is </h1>
+        <p>X</p>
+        <div class="replay btn">Play</div>
     </div>
  
+    <script src="./options.js"></script>
     <script src="./app.js"></script>
 </body>
 </html>
