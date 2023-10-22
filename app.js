@@ -53,11 +53,16 @@ function init(players, opponent){
         let i = Math.floor(X/spaceSize) ;
         let j = Math.floor(Y/spaceSize) ;
 
+        // Get the of the position the player clicked
+        id = board[i][j];
+
+        // Prevent the player from playing the space if its not empty
+        if(playerMoves[id]) return;
         // Store the players move to game data.
-        id = board[j][i];
         playerMoves[id] = currentPlayer;
         console.log(id, playerMoves);
 
+        // Switch the current player and update the players turn
         currentPlayer = currentPlayer == players.man ? players.computer : players.man;
         turn.textContent = `Turn: It is Player ${currentPlayer}'s turn`;
     })
