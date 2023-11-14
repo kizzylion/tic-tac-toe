@@ -8,7 +8,7 @@ function init(players, opponent){
     const column = 3;
     const row =3;
     const spaceSize =  150;
-
+    const GAME_OVER = false;
     
     //  STORE PLAYER MOVES
     let playerMoves=["","","","","","","","",""];
@@ -16,6 +16,12 @@ function init(players, opponent){
     // Current player by default is man
     let currentPlayer = players.man;
     turn.textContent = `Turn: It is Player ${currentPlayer}'s turn`;
+
+    //Load x and o images for canvas
+    const xImage = new Image();
+    xImage.src = "img/x.png";
+    const oImage = new Image();
+    oImage.src = "img/o.png";
 
     //DRAW THE BOARD
     function drawboard(){
@@ -42,6 +48,7 @@ function init(players, opponent){
     // ON PLAYER CLICK 
     cvs.addEventListener("click", function(event){
 
+        if(GAME_OVER) return;
         // X & Y position of mouse click relative to the canvas
         // event.client show the click position relative to the viewPort
         // cvs.getBoundaringClientRec show the position of the canvas in the view port.
@@ -53,7 +60,7 @@ function init(players, opponent){
         let i = Math.floor(X/spaceSize) ;
         let j = Math.floor(Y/spaceSize) ;
 
-        // Get the of the position the player clicked
+        // Get the id of the position the player clicked
         id = board[i][j];
 
         // Prevent the player from playing the space if its not empty
@@ -61,13 +68,27 @@ function init(players, opponent){
         // Store the players move to game data.
         playerMoves[id] = currentPlayer;
         console.log(id, playerMoves);
+        drawOnBoard(currentPlayer,i,j);
 
+        // check if he is winner
+
+        //check if its tie game
+
+
+       
         // Switch the current player and update the players turn
         currentPlayer = currentPlayer == players.man ? players.computer : players.man;
         turn.textContent = `Turn: It is Player ${currentPlayer}'s turn`;
     })
 
+    // draw player sign on the canvas position clicked
+    function drawOnBoard(player, i, j){
+        // take in the player, position row and column position clicked,
+        // then we will draw a circle or an x depending on who's turn it is
+        const img = player == "X"? xImage : oImage;
+        ctx.drawImage(img, i*spaceSize, j*spaceSize,spaceSize, spaceSize)
+    }
 
 }
 
-const gameSettings = optionScreen()
+const gameSettings = optionScreen();
