@@ -68,12 +68,16 @@ const optionScreen = () => {
         
         if(!opponent){
             computerBtn.style.backgroundColor = "red";
+            computerBtn.style.color = "white";
             humanBtn.style.backgroundColor = "red";
+            humanBtn.style.color = "white";
             return
         }
         if(!players.man){
             oBtn.style.backgroundColor = "red";
+            oBtn.style.color = "white";
             xBtn.style.backgroundColor = "red";
+            xBtn.style.color = "white";
             return
         }
         

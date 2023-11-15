@@ -50,7 +50,7 @@ function init(players, opponent){
                 id++;
 
                 // draw the space
-                ctx.strokeStyle = "#000";
+                ctx.strokeStyle = "#00000030";
                 ctx.strokeRect(i * spaceSize,j * spaceSize,spaceSize,spaceSize);
             }
         }
@@ -135,9 +135,12 @@ function init(players, opponent){
             let imgSrc = `img/${player}.png`;
 
             optionScreen().gameOverElement.innerHTML = `
-                <h1 style ="margin-top:calc(100vh - 90vh)"> ${message} </h1>
-                <img class="winnerImg" width = "150px" height = "150px" src="${imgSrc}" alt="">
-                <div class="replay btn" style ="margin-top: 20px" onclick = "location.reload()"> Play Again</div>
+                <div class="container" style ="margin-top:calc(100vh - 80vh)"> 
+                    <h1 > ${message} </h1>
+                    <img class="winnerImg" width = "150px" height = "150px" src="${imgSrc}" alt="">
+                    <div class="replay btn" style ="margin-top: 20px" onclick = "location.reload()"> Play Again</div>
+
+                </div>
             `;
             document.body.style.overflow = 'hidden';
             optionScreen().gameOverElement.classList.remove('hide');
