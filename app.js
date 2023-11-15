@@ -1,324 +1,157 @@
 
 
-(cell = () =>{
-    let value = "";
-    
-    const addToken = (player)=>{
-        return value = player.token;
-    }
-    
-    const getValue = () => value;
+//Gameboard
 
-    const resetToken = () => {
-        return value = "";
-    }
+function init(players, opponent){
+
+    let board =[];
+    const column = 3;
+    const row =3;
+    const spaceSize =  150;
+    let GAME_OVER = false;
     
-    return{
-        addToken,
-        getValue,
-        resetToken
-    }
-})();
+    //  STORE PLAYER MOVES
+    let playerMoves=["","","","","","","","",""];
 
-const gameBoard = (()=> {
-    const rows = 3;
-    const columns = 3;
-    let board = [];
+    // Current player by default is man
+    let currentPlayer = players.man;
+    turn.textContent = `Turn: It is Player ${currentPlayer}'s turn`;
 
-    for (let i = 0; i < rows; i++) {
-        board[i] = [];
-        for(let j = 0; j < columns; j++){
-            board[i].push(cell());
+    //Load x and o images for canvas
+    const xImage = new Image();
+    xImage.src = "img/X.png";
+    const oImage = new Image();
+    oImage.src = "img/O.png";
+
+    const winConditions = [
+        
+        [0,3,6],
+        [1,4,7],
+        [2,5,8],
+        [0,1,2],
+        [3,4,5],
+        [6,7,8],
+        [0,4,8],
+        [2,4,6]
+    ]
+
+    //DRAW THE BOARD
+    function drawboard(){
+        // WE give every space a unique id
+        let id = 0;
+        // So that when i click on a space, i know the space i clicked on.
+        
+
+        for(let i = 0; i<row; i++){
+            board[i] = [];
+            for (let j = 0; j < column; j++){
+                // Set and id for ever space
+                board[i][j] = id;
+                id++;
+
+                // draw the space
+                ctx.strokeStyle = "#000";
+                ctx.strokeRect(i * spaceSize,j * spaceSize,spaceSize,spaceSize);
+            }
         }
     }
+    drawboard()
 
-    const getBoard = () => { return board };
-    function isBoardFull() {
-        const boardData = board;
-        for (let rowIndex = 0; rowIndex < 3; rowIndex++) {
-            for (let columnIndex = 0; columnIndex < 3; columnIndex++) {
-                if (boardData[rowIndex][columnIndex].getValue() === "") {
-                    console.log('false')
-                    return false; // If any cell is unoccupied, return false
+    // ON PLAYER CLICK 
+    cvs.addEventListener("click", function(event){
+
+        if(GAME_OVER) return;
+        // X & Y position of mouse click relative to the canvas
+        // event.client show the click position relative to the viewPort
+        // cvs.getBoundaringClientRec show the position of the canvas in the view port.
+
+        let X =  event.clientX - cvs.getBoundingClientRect().x;
+        let Y = event. clientY - cvs.getBoundingClientRect().y;
+        
+        // WE CALCULATED i & j of the clicked canvas
+        let i = Math.floor(X/spaceSize) ;
+        let j = Math.floor(Y/spaceSize) ;
+
+        // Get the id of the position the player clicked
+        id = board[j][i];
+
+        // Prevent the player from playing the space if its not empty
+        if(playerMoves[id]) return;
+        // Store the players move to game data.
+        playerMoves[id] = currentPlayer;
+        console.log(id, playerMoves);
+        drawOnBoard(currentPlayer,i,j);
+
+        // check if he is winner
+        
+        if(isWinner(currentPlayer, playerMoves)){
+            showGameOver(currentPlayer);
+            GAME_OVER = true;
+            return;
+        }
+
+        // //check if its tie game
+        if(isTie(playerMoves)){
+            showGameOver("tie");
+            GAME_OVER = true;
+            return;
+        }
+       
+        // Switch the current player and update the players turn
+        currentPlayer = currentPlayer == players.man ? players.computer : players.man;
+        turn.textContent = `Turn: It is Player ${currentPlayer}'s turn`;
+
+        
+        function isWinner(player, playerMoves){
+            
+            for(let k=0; k < winConditions.length; k++){
+            
+                let won = true;
+                for(let l=0; l<winConditions[k].length; l++){
+                    let id = winConditions[k][l];
+                    won = playerMoves[id] == player && won;
                 }
+                if(won){
+                    return true;
+                };
             }
+            
+            return false;
         }
-        
-        return true; // All cells are occupied
-    }
 
-    const isCellOccupied =(rowIndex,columnIndex) =>{
-        return board[rowIndex][columnIndex].getValue() !== "";
-    }
-    
-    const setCellValue = (rowIndex, columnIndex, player) =>{
-        const availableCell = board;
-        availableCell[rowIndex][columnIndex].addToken(player);
-        console.log(availableCell[rowIndex][columnIndex].getValue())
-    }
+        function isTie(playerMoves){
+            let isBoardfull = true;
 
-    const resetBoard = () => {
-        board.forEach((rows)=> rows.forEach(columns => columns.resetToken()));
-        printBoard();
-        console.log(`Board Restarted`)
-    }
-
-    const printBoard = () => {
-        const boardWithCellValue = board.map(rows => rows.map((columns) => columns.getValue()) );
-        console.table(boardWithCellValue);
-    };
-
-    return {
-        getBoard,
-        isBoardFull,
-        isCellOccupied,
-        setCellValue,
-        printBoard,
-        resetBoard
-    };
-})()
-
-const gameController = (playerOneName = 'Player One', playerTwoName = 'Player Two') => {
-    const board = gameBoard;
-
-    const players = [
-        playerOne = {
-            name : playerOneName,
-            token : 'X'
-        },
-        playerTwo = {
-            name : playerTwoName,
-            token : 'O'
-        }
-    ];
-
-    let activePlayer = players[0];
-
-    const switchPlayer =  () =>{
-        activePlayer = activePlayer === players[0]? players[1]: players[0];
-    }
-
-    const getActivePlayer = () => activePlayer;
-
-    const resetActivePlayer = () => activePlayer = players[0];
-
-    const printNewRound = () => {
-        board.printBoard();
-        console.log(`${getActivePlayer().name}'s Turn...`)
-    }
-
-    const playRound = (rowIndex, columnIndex) => {
-        printNewRound();
-        if(board.isBoardFull()) {
-            const draw = () => {
-                return {
-                    congratulation : `No winner, A DRAW`,
-                    status:"draw"
-                }
+            for(let i=0; i < playerMoves.length; i++){
+                isBoardfull = playerMoves[i] && isBoardfull;
             }
-            screenController().endgame(draw())
-            return
-        };
-        if(board.isCellOccupied(rowIndex,columnIndex)) return;
 
-        board.setCellValue(rowIndex, columnIndex, getActivePlayer());
-        
-        //this is where we check the for winner
-        if(!checkForWinner()){
-            switchPlayer();
-            printNewRound();
+            if(isBoardfull) return true;
+            else return false;
         }
-        else{
-            // console.log(`${getActivePlayer().name} Won!`)
-            const winner = () => {
-                return {
-                    winnerName : getActivePlayer().name,
-                    congratulation : `${getActivePlayer().name} Won!`,
-                    status:"won"
-                }
-            }
-            screenController().endgame(winner())
-                
-        }
-    }
-    function checkForWinner() {
-        console.log('Checking for winner...');
-        console.log('Checking row winning sequence...');
-        if (checkRowWinningSequence('X') || checkRowWinningSequence('O') ) {
-            console.log('Row winning sequence found!');
-            return true;
-        }
-        console.log('Checking column winning sequence...');
-        if (checkColumnWinningSequence('X') || checkColumnWinningSequence('O')) {
-            console.log('Column winning sequence found!');
-            return true;
-        }
-        console.log('Checking diagonal winning sequence...');
-        if (checkDiagonalWinningSequence('X') || checkDiagonalWinningSequence('O')) {
-            console.log('Diagonal winning sequence found!');
-            return true;
-        }
-        console.log('No winning sequence found.');
-        return false;
-    }
 
-    function checkRowWinningSequence(winningSequence) {
-        const boardData = board.getBoard();
-        for (let rowIndex = 0; rowIndex < boardData.length; rowIndex++) {
-            const row = boardData[rowIndex];
-            if (row.every(cell => cell.getValue() === winningSequence)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    function checkColumnWinningSequence(winningSequence) {
-        const boardData = board.getBoard();
-        for (let columnIndex = 0; columnIndex < boardData[0].length; columnIndex++) {
-            const column = [];
-            for (let rowIndex = 0; rowIndex < boardData.length; rowIndex++) {
-                column.push(boardData[rowIndex][columnIndex].getValue());
-            }
-            if (column.every(cellValue => cellValue === winningSequence)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    function checkDiagonalWinningSequence(winningSequence) {
-        const boardData = board.getBoard();
-        const diagonal1 = [];
-        const diagonal2 = [];
-        
-        for (let i = 0; i < boardData.length; i++) {
-            diagonal1.push(boardData[i][i].getValue());
-            diagonal2.push(boardData[i][boardData.length - 1 - i].getValue());
-        }
-        
-        if (diagonal1.every(cellValue => cellValue === winningSequence) ||
-            diagonal2.every(cellValue => cellValue === winningSequence)) {
-            return true;
-        }
-        
-        return false;
-    }
+        function showGameOver(player){
+            let message = player == "tie" ? 'no winner' : "The winner is"
+            let imgSrc = `img/${player}.png`;
 
+            optionScreen().gameOverElement.innerHTML = `
+                <h1 style ="margin-top:calc(100vh - 90vh)"> ${message} </h1>
+                <img class="winnerImg" width = "150px" height = "150px" src="${imgSrc}" alt="">
+                <div class="replay btn" style ="margin-top: 20px" onclick = "location.reload()"> Play Again</div>
+            `;
+            document.body.style.overflow = 'hidden';
+            optionScreen().gameOverElement.classList.remove('hide');
 
-    
-    printNewRound();
-
-    return{
-        getActivePlayer,
-        resetActivePlayer,
-        getBoard: board.getBoard,
-        playRound
+        }
+    })
+    // draw player sign on the canvas position clicked
+    function drawOnBoard(player, i, j){
+        // take in the player, position row and column position clicked,
+        // then we will draw a circle or an x depending on who's turn it is
+        const img = player == "X"? xImage : oImage;
+        ctx.drawImage(img, i*spaceSize, j*spaceSize,spaceSize, spaceSize)
     }
 
 }
 
-const screenController = () => {
-    const game = gameController();
-    
-
-    const playerTurnsDiv = document.getElementById('turn');
-    const resetBtn = document.getElementById('resetBtn');
-    const boardDiv = document.getElementById('board');
-
-    const updateScreen = ()=> {
-        boardDiv.textContent = "";
-
-        //Get the latest version of the board and player turn
-        playerTurnsDiv.textContent = `${game.getActivePlayer().name}'s Turn`;
-        const board = game.getBoard();
-
-        // Render Game value
-        board.forEach((rows, index) => {
-            let rIndex = index;
-            rows.forEach((columns, index) => {
-                let cIndex = index
-                const cellBtn = document.createElement('button');
-                cellBtn.classList.add('cell');
-                cellBtn.textContent = columns.getValue();
-                cellBtn.id =`${rIndex}${cIndex}`;
-                // add click event to cell
-                cellBtn.addEventListener("click", clickHandlerBtn);
-                boardDiv.appendChild(cellBtn);
-            })
-        })
-    }
-
-    resetBtn.addEventListener('click', resetGame)
-
-    /**
-     * Handles the click event on the cell button.
-     */
-    function clickHandlerBtn(e) {
-    // Get the cell index from the clicked button's id
-    const cellIndex = e.target.id;
-
-    // Get the row index from the cell index
-    const rowIndex = cellIndex[0];
-
-    // Get the column index from the cell index
-    const columnIndex = cellIndex[1];
-
-    // Call the game's playRound method with the row and column indices
-    game.playRound(rowIndex, columnIndex);
-    if(gameBoard.isBoardFull()) {
-        const draw = () => {
-            return {
-                congratulation : `No winner, A DRAW`,
-                status:"draw"
-            }
-        }
-        screenController().endgame(draw())
-        return
-    };
-    updateScreen()
-    }
-
-
-    // Handles the click event on the resetButton
-    function resetGame () {
-        gameBoard.resetBoard();
-        game.resetActivePlayer();
-        updateScreen();
-    }
-
-    const endgame = (result) => {
-        const messageDiv = document.createElement('div');
-        messageDiv.classList.add('endgame-message');
-        
-        const messageText = document.createElement('p');
-        
-        if (result.status === 'draw') {
-            messageText.textContent = "It's a draw!";
-        } else {
-            messageText.textContent = result.congratulation;
-        }
-        
-        const restartButton = document.createElement('button');
-        restartButton.textContent = 'Restart Game';
-        restartButton.addEventListener('click', () => {
-            gameBoard.resetBoard();
-            gameController().resetActivePlayer();
-            updateScreen();
-            messageDiv.remove();
-        });
-        
-        messageDiv.appendChild(messageText);
-        messageDiv.appendChild(restartButton);
-        
-        document.body.appendChild(messageDiv);
-    };
-
-
-    updateScreen()
-
-    return {endgame}
-
-}
-
-
-
-screenController()
+const gameSettings = optionScreen();
