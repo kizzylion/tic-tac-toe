@@ -19,9 +19,9 @@ function init(players, opponent){
 
     //Load x and o images for canvas
     const xImage = new Image();
-    xImage.src = "./img/X.png";
+    xImage.src = "img/X.png";
     const oImage = new Image();
-    oImage.src = "./img/O.png";
+    oImage.src = "img/O.png";
 
     const winConditions = [
         
