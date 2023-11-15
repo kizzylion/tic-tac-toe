@@ -91,11 +91,11 @@ function init(players, opponent){
         }
 
         // //check if its tie game
-        // if(isTie()){
-        //     showGameOver(cur);
-        //     GAME_OVER = true;
-        //     return;
-        // }
+        if(isTie(playerMoves)){
+            showGameOver("tie");
+            GAME_OVER = true;
+            return;
+        }
        
         // Switch the current player and update the players turn
         currentPlayer = currentPlayer == players.man ? players.computer : players.man;
@@ -116,6 +116,17 @@ function init(players, opponent){
             }
             
             return false;
+        }
+
+        function isTie(playerMoves){
+            let isBoardfull = true;
+
+            for(let i=0; i < playerMoves.length; i++){
+                isBoardfull = playerMoves[i] && isBoardfull;
+            }
+
+            if(isBoardfull) return true;
+            else return false;
         }
 
         function showGameOver(player){
