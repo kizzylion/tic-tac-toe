@@ -2,6 +2,8 @@
 
 let cvs = document.getElementById('cvs');
 let  ctx = cvs.getContext('2d');
+let title = document.querySelector(".title")
+let turn = document.querySelector(".turn")
     
    
 
@@ -77,6 +79,8 @@ const optionScreen = () => {
         
         init(players, opponent);
         cvs.classList.toggle("hide")
+        title.classList.toggle("hide")
+        turn.classList.toggle("hide")
         options.classList.toggle("hide")
 
     })
@@ -91,9 +95,8 @@ const optionScreen = () => {
 
     return {
         getOpponent,
-        getPlayers
+        getPlayers,
+        gameOverElement
     }
 
 }
-
-ctx
