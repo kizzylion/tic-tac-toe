@@ -52,3 +52,18 @@ canvas{
     padding: 24px 24px;
     text-align: center;
 }
+
+.gameover{
+    display: flex;
+    flex-direction: column;
+    place-items: center;
+    text-align: center;
+    border: 1px solid black;
+    width: fit-content;
+    padding: 24px 24px;
+    width: 100vw;
+    height: 100vh;
+    background: #fff;
+    color:  #222;
+    overflow: hidden;
+}

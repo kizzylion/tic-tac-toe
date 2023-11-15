@@ -95,7 +95,8 @@ const optionScreen = () => {
 
     return {
         getOpponent,
-        getPlayers
+        getPlayers,
+        gameOverElement
     }
 
 }

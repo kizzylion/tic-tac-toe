@@ -8,7 +8,7 @@ function init(players, opponent){
     const column = 3;
     const row =3;
     const spaceSize =  150;
-    const GAME_OVER = false;
+    let GAME_OVER = false;
     
     //  STORE PLAYER MOVES
     let playerMoves=["","","","","","","","",""];
@@ -19,9 +19,21 @@ function init(players, opponent){
 
     //Load x and o images for canvas
     const xImage = new Image();
-    xImage.src = "img/x.png";
+    xImage.src = "img/X.png";
     const oImage = new Image();
-    oImage.src = "img/o.png";
+    oImage.src = "img/O.png";
+
+    const winConditions = [
+        
+        [0,3,6],
+        [1,4,7],
+        [2,5,8],
+        [0,1,2],
+        [3,4,5],
+        [6,7,8],
+        [0,4,8],
+        [2,4,6]
+    ]
 
     //DRAW THE BOARD
     function drawboard(){
@@ -61,7 +73,7 @@ function init(players, opponent){
         let j = Math.floor(Y/spaceSize) ;
 
         // Get the id of the position the player clicked
-        id = board[i][j];
+        id = board[j][i];
 
         // Prevent the player from playing the space if its not empty
         if(playerMoves[id]) return;
@@ -71,16 +83,55 @@ function init(players, opponent){
         drawOnBoard(currentPlayer,i,j);
 
         // check if he is winner
+        
+        if(isWinner(currentPlayer, playerMoves)){
+            showGameOver(currentPlayer);
+            GAME_OVER = true;
+            return;
+        }
 
-        //check if its tie game
-
-
+        // //check if its tie game
+        // if(isTie()){
+        //     showGameOver(cur);
+        //     GAME_OVER = true;
+        //     return;
+        // }
        
         // Switch the current player and update the players turn
         currentPlayer = currentPlayer == players.man ? players.computer : players.man;
         turn.textContent = `Turn: It is Player ${currentPlayer}'s turn`;
-    })
 
+        function isWinner(player, playerMoves){
+            
+            for(let k=0; k < winConditions.length; k++){
+            
+                let won = true;
+                for(let l=0; l<winConditions[k].length; l++){
+                    let id = winConditions[k][l];
+                    won = playerMoves[id] == player && won;
+                }
+                if(won){
+                    return true;
+                };
+            }
+            
+            return false;
+        }
+
+        function showGameOver(player){
+            let message = player == "tie" ? 'no winner' : "The winner is"
+            let imgSrc = `img/${player}.png`;
+
+            optionScreen().gameOverElement.innerHTML = `
+                <h1 style ="margin-top:calc(100vh - 90vh)"> ${message} </h1>
+                <img class="winnerImg" width = "150px" height = "150px" src="${imgSrc}" alt="">
+                <div class="replay btn" style ="margin-top: 20px" onclick = "location.reload()"> Play Again</div>
+            `;
+            document.body.style.overflow = 'hidden';
+            optionScreen().gameOverElement.classList.remove('hide');
+
+        }
+    })
     // draw player sign on the canvas position clicked
     function drawOnBoard(player, i, j){
         // take in the player, position row and column position clicked,
