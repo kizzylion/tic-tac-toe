@@ -68,20 +68,25 @@ const optionScreen = () => {
         
         if(!opponent){
             computerBtn.style.backgroundColor = "red";
-            computerBtn.style.color = "white";
+            // computerBtn.style.color = "white";
             humanBtn.style.backgroundColor = "red";
-            humanBtn.style.color = "white";
+            // humanBtn.style.color = "white";
             return
         }
         if(!players.man){
             oBtn.style.backgroundColor = "red";
-            oBtn.style.color = "white";
+            // oBtn.style.color = "white";
             xBtn.style.backgroundColor = "red";
-            xBtn.style.color = "white";
+            // xBtn.style.color = "white";
             return
         }
         
-        init(players, opponent);
+        // Check if the player chose "O" and set the starting player accordingly
+        if (players.man === "O") {
+            init(players, opponent, players.computer); // Start with computer if player chose "O"
+        } else {
+            init(players, opponent, players.man); // Start with player if player chose "X"
+        }
         cvs.classList.toggle("hide")
         title.classList.toggle("hide")
         turn.classList.toggle("hide")
